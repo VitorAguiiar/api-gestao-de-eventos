@@ -24,11 +24,7 @@ public class EventoService {
     @Autowired
     private ParticipantesRepository participantesRepository;
 
-    /**
-     * Cria um novo evento.
-     * @param dto Os dados do evento a ser criado.
-     * @return O DTO do evento criado.
-     */
+ 
     public EventoDTO criarEvento(EventoDTO dto) {
         Evento novoEvento = new Evento(
                 null,
@@ -42,10 +38,7 @@ public class EventoService {
         return new EventoDTO(novoEvento);
     }
 
-    /**
-     * Lista todos os eventos disponíveis.
-     * @return Uma lista de EventoDTOs.
-     */
+   
     @Transactional(readOnly = true)
     public List<EventoDTO> listarEventos() {
         List<Evento> eventos = eventoRepository.findAll();
@@ -54,12 +47,7 @@ public class EventoService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Busca um evento por ID.
-     * @param id O ID do evento.
-     * @return O EventoDTO correspondente.
-     * @throws IllegalArgumentException se o evento não for encontrado.
-     */
+   
     @Transactional(readOnly = true)
     public EventoDTO buscarEventoPorId(Long id) {
         Optional<Evento> evento = eventoRepository.findById(id);
@@ -67,13 +55,7 @@ public class EventoService {
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado com ID: " + id));
     }
 
-    /**
-     * Atualiza os dados de um evento existente.
-     * @param id O ID do evento a ser atualizado.
-     * @param dto Os novos dados do evento.
-     * @return O EventoDTO atualizado.
-     * @throws IllegalArgumentException se o evento não for encontrado.
-     */
+ 
     public EventoDTO atualizarEvento(Long id, EventoDTO dto) {
         Evento eventoExistente = eventoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado com ID: " + id));
@@ -88,11 +70,7 @@ public class EventoService {
         return new EventoDTO(eventoExistente);
     }
 
-    /**
-     * Exclui um evento pelo ID.
-     * @param id O ID do evento a ser excluído.
-     * @throws IllegalArgumentException se o evento não for encontrado.
-     */
+   
     public void excluirEvento(Long id) {
         if (!eventoRepository.existsById(id)) {
             throw new IllegalArgumentException("Evento não encontrado com ID: " + id);
@@ -100,18 +78,12 @@ public class EventoService {
         eventoRepository.deleteById(id);
     }
 
-    /**
-     * Lista todos os participantes inscritos em um evento específico.
-     * @param eventoId O ID do evento.
-     * @return Uma lista de ParticipantesDTOs.
-     * @throws IllegalArgumentException se o evento não for encontrado.
-     */
+   
     @Transactional(readOnly = true)
     public List<ParticipantesDTO> listarParticipantesPorEvento(Long eventoId) {
         Evento evento = eventoRepository.findById(eventoId)
                 .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado com ID: " + eventoId));
 
-        // Converte o Set<Participantes> para List<ParticipantesDTO>
         return evento.getParticipantes().stream()
                 .map(ParticipantesDTO::new)
                 .collect(Collectors.toList());
